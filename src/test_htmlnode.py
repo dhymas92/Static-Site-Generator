@@ -34,12 +34,16 @@ class TestHTMLNode(unittest.TestCase):
         self.assertNotEqual(node.value, node2.value)
 
     def test_repr(self):
-        test_prop = {
-            "href": "https://www.google.com",
-            "target": "_blank",
-        }
-        node = HTMLNode("p", "test text", None, test_prop)
-        print(node)
+            node = HTMLNode(
+                "p",
+                "What a strange world",
+                None,
+                {"class": "primary"},
+            )
+            self.assertEqual(
+                node.__repr__(),
+                "HTMLNode(p, What a strange world, children: None, {'class': 'primary'})",
+            )
 
     def test_leaf_to_html_p(self):
         node = LeafNode("p", "Hello, world!")

@@ -1,9 +1,17 @@
-from textnode import *
+from markdown_to_html_node import *
+import inline_markdown
+
 
 def main():
-    test_node = TextNode("This is some test text",
-                        TextType.LINK,
-                        "https://www.boot.dev")
-    print(test_node)
+    md = """
+   ```
+   This is text that _should_ remain
+   the **same** even with inline stuff
+   ```
+   """
+    node = markdown_to_html_node(md)
+    html = node.to_html()
+    print(html)
+
 
 main()

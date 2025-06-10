@@ -1,6 +1,18 @@
 from textnode import TextType, TextNode
 import re
 
+def text_to_textnodes(text):
+    nodes = [TextNode(text, TextType.TEXT)]
+    delimiters = {TextType.BOLD: "**", TextType.ITALIC: "_", TextType.CODE: "`"}
+
+    for type in delimiters:
+        symb = delimiters[type]
+        nodes = split_nodes_delimiter(nodes, symb, type)
+
+    nodes = split_nodes_link(split_nodes_image(nodes))
+
+    return nodes
+
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
     new_nodes = []
 
@@ -23,6 +35,7 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
 
 
     return new_nodes
+
 
 def split_nodes_image(old_nodes):
     new_nodes = []
@@ -78,20 +91,6 @@ def split_nodes_link(old_nodes):
 
     return new_nodes
 
-def text_to_textnodes(text):
-    nodes = [TextNode(text, TextType.TEXT)]
-    delimiters = {TextType.BOLD: "**", TextType.ITALIC: "_", TextType.CODE: "`"}
-
-    for type in delimiters:
-        symb = delimiters[type]
-        nodes = split_nodes_delimiter(nodes, symb, type)
-
-    nodes = split_nodes_link(split_nodes_image(nodes))
-
-    return nodes
-
-
-
 def extract_markdown_images(text):
     image_text = re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
     return image_text
@@ -99,7 +98,3 @@ def extract_markdown_images(text):
 def extract_markdown_links(text):
     link_text = re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
     return link_text
-
-
-text = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
-print(text_to_textnodes(text))
